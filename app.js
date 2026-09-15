@@ -44,9 +44,9 @@ function renderLiveEarnings() {
   const end = document.getElementById('workEnd');
   if (!days || !start || !end) return;
   const earned = calculateEarningsProgress(latestMonthlyNet, new Date(), days.value, start.value, end.value);
-  document.getElementById('earnedYear').textContent = formatCurrency(earned.year);
-  document.getElementById('earnedMonth').textContent = formatCurrency(earned.month);
   document.getElementById('earnedToday').textContent = formatCurrency(earned.today);
+  document.getElementById('earnedWeek').textContent = formatCurrency(earned.week);
+  document.getElementById('earnedYear').textContent = formatCurrency(earned.year);
 }
 
 function renderResults(result) {
@@ -77,8 +77,7 @@ function updateEligibilityControl(input, available, reason) {
   const note = input.closest('.control-block')?.querySelector('.eligibility-note');
   input.disabled = !available;
   if (!available && input.type === 'checkbox') input.checked = false;
-  input.title = reason;
-  if (control) { control.title = reason; control.hidden = !available; control.style.display = available ? 'flex' : 'none'; }
+  if (control) { control.hidden = !available; control.style.display = available ? 'grid' : 'none'; }
   if (note) { note.textContent = reason; note.hidden = available; note.style.display = available ? 'none' : 'block'; }
 }
 

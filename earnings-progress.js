@@ -47,9 +47,26 @@
       : 0;
     const monthEarned = Math.min(safeNet, (safeNet / days) * (Math.min(days, completedWorkdays) + todayProgress));
     const todayEarned = (safeNet / days) * todayProgress;
+    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const daysSinceMonday = (now.getDay() + 6) % 7;
+    monday.setDate(monday.getDate() - daysSinceMonday);
+    let completedWeekdays = 0;
+
+    for (let date = new Date(monday); date < now; date.setDate(date.getDate() + 1)) {
+      const weekday = date.getDay();
+      if (weekday === 0 || weekday === 6 || date.toDateString() === now.toDateString()) continue;
+      let workdayNumber = 0;
+      for (let day = 1; day <= date.getDate(); day += 1) {
+        const dayOfWeek = new Date(date.getFullYear(), date.getMonth(), day).getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) workdayNumber += 1;
+      }
+      if (workdayNumber <= days) completedWeekdays += 1;
+    }
+    const weekEarned = (safeNet / days) * (completedWeekdays + todayProgress);
     return {
       year: safeNet * now.getMonth() + monthEarned,
       month: monthEarned,
+      week: weekEarned,
       today: todayEarned,
     };
   }

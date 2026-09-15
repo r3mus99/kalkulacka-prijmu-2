@@ -151,7 +151,7 @@ label {
 
 .controls-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, max-content);
   gap: 14px;
   margin-top: -4px;
   padding-top: 20px;
@@ -179,16 +179,16 @@ label {
 }
 
 .inline-control {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 6px;
   min-height: 38px;
   min-width: 0;
-  width: 100%;
+  width: max-content;
   max-width: 100%;
   color: var(--text);
   font-weight: 700;
-  justify-content: space-between;
   padding: 10px 12px;
   background: rgba(255, 255, 255, 0.3);
   border: 1px solid transparent;
@@ -608,7 +608,6 @@ td small {
   overflow: hidden;
 }
 
-.earnings-settings,
 .earnings-values {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -616,27 +615,73 @@ td small {
 }
 
 .earnings-settings {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 14px;
   padding: 20px 0;
   border-top: 1px solid var(--line);
 }
 
 .earnings-settings label {
   display: grid;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 0.82rem;
+  grid-template-columns: max-content auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 0.92rem;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.earnings-settings label:hover {
+  background: rgba(255, 255, 255, 0.58);
+  border-color: rgba(200, 182, 232, 0.55);
+}
+
+.earnings-settings label > span {
+  white-space: nowrap;
 }
 
 .earnings-settings input {
-  width: 100%;
-  min-height: 44px;
-  padding: 9px 12px;
+  width: auto;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 8px;
   border: 1px solid var(--input-border);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.42);
   color: var(--text);
   font: inherit;
   font-weight: 700;
+}
+
+#workingDays {
+  width: 72px;
+}
+
+#workStart,
+#workEnd {
+  width: 112px;
+  min-width: 112px;
+  max-width: 112px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+#workStart::-webkit-calendar-picker-indicator,
+#workEnd::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+#workStart::-webkit-datetime-edit,
+#workEnd::-webkit-datetime-edit {
+  padding: 0;
 }
 
 .earnings-settings input:focus {
@@ -676,7 +721,7 @@ td small {
 }
 @media (max-width: 900px) {
   .controls-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, max-content);
     gap: 12px;
   }
 }
@@ -730,5 +775,32 @@ td small {
   .earnings-settings,
   .earnings-values {
     grid-template-columns: 1fr;
+  }
+
+  .earnings-settings {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .earnings-settings label:first-child,
+  .earnings-settings label:not(:first-child) {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .earnings-settings label > span {
+    white-space: normal;
+  }
+
+  #workingDays {
+    width: 72px;
+  }
+
+  #workStart,
+  #workEnd {
+    width: 112px;
+    min-width: 112px;
+    max-width: 112px;
   }
 }
