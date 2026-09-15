@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulačka čisté mzdy 2026</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Kalkulačka čistej mzdy</h1>
+        <p class="subtitle">2026 · Slovensko · zjednodušený model pre výpočet</p>
+      </header>
+
+      <section class="panel calculator-panel">
+        <form id="salary-form">
+          <div class="salary-inputs-row">
+            <div class="field-block gross-block">
+              <div class="label-row compact-label-row">
+                <label for="grossSalary">hrubá mzda</label>
+              </div>
+
+              <div class="gross-input-wrap">
+                <input id="grossSalary" name="grossSalary" type="text" inputmode="decimal" value="1 500" />
+                <span class="currency-symbol">€</span>
+              </div>
+            </div>
+
+            <span class="salary-arrow" aria-hidden="true">→</span>
+
+            <div class="field-block net-block">
+              <div class="label-row compact-label-row">
+                <label for="netSalaryPreview">čistá mzda</label>
+              </div>
+
+              <div class="gross-input-wrap">
+                <input id="netSalaryPreview" type="text" inputmode="decimal" value="1 134.52" />
+                <span class="currency-symbol">€</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls-row">
+            <div class="control-block">
+              <label
+                class="inline-control"
+                for="taxFreeAllowance"
+                title="Nezdaniteľná časť sa pri vyššom základe dane postupne znižuje."
+              >
+                <span>nezdaniteľná časť</span>
+                <input
+                  id="taxFreeAllowance"
+                  type="checkbox"
+                  checked
+                  title="Nezdaniteľná časť sa pri vyššom základe dane postupne znižuje."
+                />
+              </label>
+              <small class="eligibility-note" hidden></small>
+            </div>
+
+            <div class="control-block">
+              <label class="inline-control" for="childrenUnder15" title="Počet detí do 15 rokov">
+                <span>deti do 15</span>
+                <span class="stepper">
+                  <input id="childrenUnder15" type="number" min="0" step="1" value="0" title="Počet detí do 15 rokov" />
+                </span>
+              </label>
+              <small class="eligibility-note" hidden></small>
+            </div>
+
+            <div class="control-block">
+              <label class="inline-control" for="children15to18" title="Počet detí vo veku 15 až 18 rokov">
+                <span>deti 15 - 18</span>
+                <span class="stepper">
+                  <input id="children15to18" type="number" min="0" step="1" value="0" title="Počet detí vo veku 15 až 18 rokov" />
+                </span>
+              </label>
+              <small class="eligibility-note" hidden></small>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="results panel">
+        <div
+          class="breakdown-row"
+          role="button"
+          tabindex="0"
+          aria-expanded="true"
+          aria-controls="salaryDetails"
+          aria-label="Rozdelenie hrubej mzdy. Skryť detailný rozpis."
+        >
+          <div
+            id="salaryPieChart"
+            class="salary-pie-chart"
+            aria-hidden="true"
+          ></div>
+          <div class="breakdown-legend" aria-label="Legenda rozdelenia mzdy">
+            <div class="legend-item">
+              <span class="legend-swatch legend-contributions"></span>
+              <span>Odvody</span>
+              <strong><span id="chartContributions">0.00 €</span><small id="chartContributionsPercent"></small></strong>
+            </div>
+            <div class="legend-item">
+              <span class="legend-swatch legend-tax"></span>
+              <span>Daň</span>
+              <strong><span id="chartTax">0.00 €</span><small id="chartTaxPercent"></small></strong>
+            </div>
+            <div class="legend-item">
+              <span class="legend-swatch legend-net"></span>
+              <span>Čistá mzda</span>
+              <strong><span id="chartNet">0.00 €</span><small id="chartNetPercent"></small></strong>
+            </div>
+          </div>
+          <span class="details-toggle-icon" aria-hidden="true"></span>
+        </div>
+
+        <div class="details-wrap">
+          <div id="salaryDetails" class="details-content">
+            <div class="details-content-inner">
+          <table>
+            <tbody>
+              <tr class="row-contributions">
+                <th>Odvody</th>
+                <td><span class="value-negative" id="employeeContributions">0.00 €</span><small id="employeeContributionsPercent"></small></td>
+              </tr>
+              <tr class="sub-row">
+                <th>Zdravotné</th>
+                <td><span class="value-negative" id="healthInsurance">0.00 €</span><small id="healthInsurancePercent"></small></td>
+              </tr>
+              <tr class="sub-row">
+                <th>Sociálne</th>
+                <td><span class="value-negative" id="socialInsurance">0.00 €</span><small id="socialInsurancePercent"></small></td>
+              </tr>
+              <tr class="row-tax">
+                <th>Daň</th>
+                <td><span class="value-negative" id="taxAfterBonus">0.00 €</span><small id="taxAfterBonusPercent"></small></td>
+              </tr>
+              <tr class="sub-row tax-base-row">
+                <th>Základ dane</th>
+                <td><span class="value-negative" id="taxBase">0.00 €</span><small id="taxBasePercent"></small></td>
+              </tr>
+              <tr class="sub-row">
+                <th>Nezdaniteľná časť</th>
+                <td><span class="value-positive" id="taxFreeDeduction">0.00 €</span><small id="taxFreeDeductionPercent"></small></td>
+              </tr>
+              <tr class="sub-row">
+                <th>Bonus</th>
+                <td><span class="value-positive" id="taxBonus">0.00 €</span><small id="taxBonusPercent"></small></td>
+              </tr>
+              <tr class="total-row row-net">
+                <th>Čistá mzda</th>
+                <td><span class="value-positive" id="netAfterDeductions">0.00 €</span><small id="netAfterDeductionsPercent"></small></td>
+              </tr>
+            </tbody>
+          </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="earnings-panel panel">
+        <button
+          class="earnings-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="earningsContent"
+        >
+          <span>
+            <strong>Priebežný zárobok</strong>
+            <small>Podľa pracovného času a aktuálneho dátumu</small>
+          </span>
+          <span class="earnings-toggle-icon" aria-hidden="true"></span>
+        </button>
+
+        <div id="earningsContent" class="earnings-content is-collapsed">
+          <div class="earnings-content-inner">
+            <div class="earnings-settings">
+              <label>
+                <span>Pracovných dní v mesiaci</span>
+                <input id="workingDays" type="number" min="1" max="31" step="1" />
+              </label>
+              <label>
+                <span>Začiatok práce</span>
+                <input id="workStart" type="time" value="08:00" />
+              </label>
+              <label>
+                <span>Koniec práce</span>
+                <input id="workEnd" type="time" value="16:00" />
+              </label>
+            </div>
+
+            <div class="earnings-values">
+              <div>
+                <small>Tento rok</small>
+                <strong id="earnedYear">0.00 €</strong>
+              </div>
+              <div>
+                <small>Tento mesiac</small>
+                <strong id="earnedMonth">0.00 €</strong>
+              </div>
+              <div>
+                <small>Dnes</small>
+                <strong id="earnedToday">0.00 €</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="formatters.js"></script>
+    <script src="salary-calculator.js"></script>
+    <script src="earnings-progress.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
